@@ -17,7 +17,7 @@ jobs:
         uses: 'actions/checkout@v2'
         with:
           ref: ${{ github.ref }}
-          token: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN for authentication
 
       - name: Create GitHub deployment
         uses: chrnorm/deployment-action@v2
@@ -30,7 +30,7 @@ jobs:
       - name: Set up SSH Key and Deploy my App on Server
         uses: appleboy/ssh-action@master
         env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GITHUB_TOKEN for authentication
         with:
           host: ${{ secrets.VPS_IP }}
           username: ${{ secrets.VPS_USERNAME }}
@@ -38,17 +38,33 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           port: 22
           script: |
-            git config --global url."https://${{ secrets.PERSONAL_GITHUB_TOKEN }}:@github.com".insteadOf "https://github.com"
+            # Using GitHub Token for authentication with private repositories
+            git config --global url."https://${{ secrets.GITHUB_TOKEN }}:@github.com".insteadOf "https://github.com"
+
+            # Check if the repo is already cloned. If not, clone it.
+            if [ ! -d "${{ secrets.PROD_DIR }}" ] && [ "${{ github.ref }}" == "refs/heads/main" ]; then
+              echo "Cloning production repository..."
+              git clone https://github.com/${{ github.repository }} ${{ secrets.PROD_DIR }}
+              cd ${{ secrets.PROD_DIR }}
+              git checkout main
+            elif [ ! -d "${{ secrets.DEV_DIR }}" ] && [ "${{ github.ref }}" == "refs/heads/develop" ]; then
+              echo "Cloning development repository..."
+              git clone https://github.com/${{ github.repository }} ${{ secrets.DEV_DIR }}
+              cd ${{ secrets.DEV_DIR }}
+              git checkout develop
+            fi
+
+            # If the repo is already cloned, pull the latest changes.
             if [ "${{ github.ref }}" == "refs/heads/main" ]; then
               echo "Deploying to production..."
-              cd ${{ secrets.PROD_DIR }}  # Use PROD_DIR secret for production directory
+              cd ${{ secrets.PROD_DIR }}
               git pull origin main  # Pull from main for production
               npm ci
               npm run frontend
               pm2 restart chatg --update-env
             elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
               echo "Deploying to development..."
-              cd ${{ secrets.DEV_DIR }}  # Use DEV_DIR secret for development directory
+              cd ${{ secrets.DEV_DIR }}
               git pull origin develop  # Pull from develop for development
               npm ci
               npm run frontend
