@@ -45,7 +45,7 @@ jobs:
             if [ "${{ github.ref }}" == "refs/heads/main" ]; then
               if [ ! -d "${{ secrets.PROD_DIR }}/backend" ] || [ ! "$(ls -A ${{ secrets.PROD_DIR }}/backend)" ]; then
                 echo "Cloning production repository..."
-                git clone https://github.com/${{ github.repository }}/backend ${{ secrets.PROD_DIR }}
+                git clone https://github.com/${{ github.repository }} ${{ secrets.PROD_DIR }}/backend
                 cd ${{ secrets.PROD_DIR }}/backend
                 git checkout main
               else
@@ -62,7 +62,7 @@ jobs:
             elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
               if [ ! -d "${{ secrets.DEV_DIR }}/backend" ] || [ ! "$(ls -A ${{ secrets.DEV_DIR }}/backend)" ]; then
                 echo "Cloning development repository..."
-                git clone https://github.com/${{ github.repository }}/backend ${{ secrets.DEV_DIR }}
+                git clone https://github.com/${{ github.repository }} ${{ secrets.DEV_DIR }}/backend
                 cd ${{ secrets.DEV_DIR }}/backend
                 git checkout develop
               else
