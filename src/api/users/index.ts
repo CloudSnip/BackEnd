@@ -4,7 +4,6 @@ import { authenticate } from '../../services/auth/auth.ts';
 import { UsersRoleEnum } from '../../utils/enum.ts';
 import { validateBody } from '../../services/validator/body/index.ts';
 import { UpdateMePasswordSchema, UpdateMeSchema } from './middlewares/index.ts';
-import { upload } from '../../../index.ts';
 const router = Router();
 
 /**
@@ -222,43 +221,6 @@ router.put('/me', authenticate(), validateBody(UpdateMeSchema), actions.UpdateMe
  *         description: User not found
  */
 router.put('/me/password', authenticate(), validateBody(UpdateMePasswordSchema), actions.UpdateMePassword);
-
-/**
- * @swagger
- * /users/me/profile-picture:
- *   put:
- *     summary: Update the current user's profile picture
- *     tags: [Users]
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             type: object
- *             properties:
- *               profilePicture:
- *                 type: string
- *                 format: binary
- *                 description: The new profile picture
- *     responses:
- *       200:
- *         description: Profile picture updated successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Profile picture updated successfully
- *       400:
- *         description: Bad request
- *       401:
- *         description: Unauthorized
- *       404:
- *         description: User not found
- */
-router.post('/me/profile-picture', authenticate(), upload.single('file'), actions.UpdateMeProfilePicture);
 
 /**
  * @swagger
