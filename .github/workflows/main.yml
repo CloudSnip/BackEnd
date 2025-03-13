@@ -54,6 +54,22 @@ jobs:
                 git pull origin main  # Pull from main for production
               fi
 
+              # Configure .env file
+              ENV_FILE_CONTENT="
+                      APP_NAME=${{ vars.APP_NAME }}
+                      CLIENT_URL=${{ vars.CLIENT_URL_PROD }}
+                      IP=${{ vars.IP }}
+                      PORT=${{ vars.PORT }}
+                      MASTER_KEY=${{ secrets.MASTER_KEY_PROD }}
+                      JWT_SECRET=${{ secrets.JWT_SECRET_PROD }}
+                      MONGODB_URI=${{ secrets.MONGODB_URI_PROD }}
+                      SECRET_MASTER_URL=${{ secrets.SECRET_MASTER_URL }}
+                      SECRET_MASTER_NAME=${{ secrets.SECRET_MASTER_NAME }}
+                      HOST=${{ secrets.HOST }}
+                    "
+
+              echo "$ENV_FILE_CONTENT" > ${{ secrets.PROD_DIR }}/backend/.env
+
               # Deploy the production app
               npm ci
               # Ensure pm2 is running and the correct process is started
@@ -77,6 +93,22 @@ jobs:
                 cd ${{ secrets.DEV_DIR }}/backend
                 git pull origin develop  # Pull from develop for development
               fi
+
+              # Configure .env file
+              ENV_FILE_CONTENT="
+                      APP_NAME=${{ vars.APP_NAME }}
+                      CLIENT_URL=${{ vars.CLIENT_URL_DEV }}
+                      IP=${{ vars.IP }}
+                      PORT=${{ vars.PORT }}
+                      MASTER_KEY=${{ secrets.MASTER_KEY_DEV }}
+                      JWT_SECRET=${{ secrets.JWT_SECRET_DEV }}
+                      MONGODB_URI=${{ secrets.MONGODB_URI_DEV }}
+                      SECRET_MASTER_URL=${{ secrets.SECRET_MASTER_URL }}
+                      SECRET_MASTER_NAME=${{ secrets.SECRET_MASTER_NAME }}
+                      HOST=${{ secrets.HOST }}
+                    "
+
+              echo "$ENV_FILE_CONTENT" > ${{ secrets.PROD_DIR }}/backend/.env
 
               # Deploy the development app
               npm ci
