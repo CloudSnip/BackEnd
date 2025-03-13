@@ -30,11 +30,11 @@ jobs:
           if [ $GITHUB_REF == "refs/heads/main" ]; then
             echo "Deploying to production..."
             # Your production deploy script goes here
-            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/prod/backend && git pull && docker-compose up -d"
-            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/prod/frontend && git pull && npm install && npm run build && pm2 restart frontend"
+            ssh -o StrictHostKeyChecking=no root@${{ secrets.VPS_SERVER_IP }} "cd /var/www/prod/backend && git pull && docker-compose up -d"
+            ssh -o StrictHostKeyChecking=no root@${{ secrets.VPS_SERVER_IP }} "cd /var/www/prod/frontend && git pull && npm install && npm run build && pm2 restart frontend"
           elif [ $GITHUB_REF == "refs/heads/develop" ]; then
             echo "Deploying to development..."
             # Your development deploy script goes here
-            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/dev/backend && git pull && docker-compose up -d"
-            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/dev/frontend && git pull && npm install && npm run build && pm2 restart frontend"
+            ssh -o StrictHostKeyChecking=no root@${{ secrets.VPS_SERVER_IP }} "cd /var/www/dev/backend && git pull && docker-compose up -d"
+            ssh -o StrictHostKeyChecking=no root@${{ secrets.VPS_SERVER_IP }} "cd /var/www/dev/frontend && git pull && npm install && npm run build && pm2 restart frontend"
           fi
