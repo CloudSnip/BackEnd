@@ -79,7 +79,7 @@ jobs:
                 pm2 restart chatg --update-env
               else
                 echo "Process 'chatg' not found. Starting new process..."
-                pm2 start ${{ secrets.DEV_PROD }}/backend npm --name chatg -- run dev  # Adjust the path as necessary
+                pm2 start ${{ secrets.PROD_DIR }}/backend npm --name chatg -- run dev  # Adjust the path as necessary
                 pm2 save  # Save the process to be resurrected on reboot
               fi
 
