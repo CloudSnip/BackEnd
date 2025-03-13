@@ -2,6 +2,7 @@ import { ConfigurableSchema } from "../../utils/lib/mongoose/index.ts";
 import mongoose, { Document, Model } from 'mongoose';
 import { Schema } from "mongoose";
 import { parseMessage, toJSON } from "./utils/index.ts";
+import mongooseToSwagger from 'mongoose-to-swagger';
 
 export interface IMeasurement extends Document {
     timestamp: Schema.Types.Date
@@ -63,5 +64,6 @@ const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel,
 })
 
 const Measurement = mongoose.model<IMeasurement, MeasurementModel>('Measurament', measurementSchema);
-
+export const swaggerSchema = mongooseToSwagger(Measurement);
+ 
 export default Measurement;
