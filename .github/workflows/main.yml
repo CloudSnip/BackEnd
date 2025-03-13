@@ -56,7 +56,15 @@ jobs:
 
               # Deploy the production app
               npm ci
-              pm2 restart chatg --update-env
+              # Ensure pm2 is running and the correct process is started
+              if pm2 list | grep -q 'chatg'; then
+                echo "Process 'chatg' is already running. Restarting..."
+                pm2 restart chatg --update-env
+              else
+                echo "Process 'chatg' not found. Starting new process..."
+                pm2 start ${{ secrets.PROD_DIR }}/backend --name chatg --env production  # Adjust the path as necessary
+                pm2 save  # Save the process to be resurrected on reboot
+              fi
 
             elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
               if [ ! -d "${{ secrets.DEV_DIR }}/backend" ] || [ ! "$(ls -A ${{ secrets.DEV_DIR }}/backend)" ]; then
@@ -73,7 +81,15 @@ jobs:
               # Deploy the development app
               npm ci
               npm run frontend
-              pm2 restart chatg --update-env
+              # Ensure pm2 is running and the correct process is started
+              if pm2 list | grep -q 'chatg'; then
+                echo "Process 'chatg' is already running. Restarting..."
+                pm2 restart chatg --update-env
+              else
+                echo "Process 'chatg' not found. Starting new process..."
+                pm2 start ${{ secrets.DEV_DIR }}/backend --name chatg --env production  # Adjust the path as necessary
+                pm2 save  # Save the process to be resurrected on reboot
+              fi
             fi
 
       - name: Update deployment Status (success)
