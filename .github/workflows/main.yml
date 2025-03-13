@@ -1,0 +1,39 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+
+      - name: Debugging VPS Server IP
+        run: |
+          echo "VPS Server IP: ${{ secrets.VPS_SERVER_IP }}"
+          # To avoid exposing sensitive data, ensure you don't echo private keys or other secrets
+
+      - name: Deploy Backend and Frontend
+        run: |
+          if [ $GITHUB_REF == "refs/heads/main" ]; then
+            echo "Deploying to production..."
+            # Your production deploy script goes here
+            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/prod/backend && git pull && docker-compose up -d"
+            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/prod/frontend && git pull && npm install && npm run build && pm2 restart frontend"
+          elif [ $GITHUB_REF == "refs/heads/develop" ]; then
+            echo "Deploying to development..."
+            # Your development deploy script goes here
+            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/dev/backend && git pull && docker-compose up -d"
+            ssh -o StrictHostKeyChecking=no $USER@${{ secrets.VPS_SERVER_IP }} "cd /var/www/dev/frontend && git pull && npm install && npm run build && pm2 restart frontend"
+          fi
