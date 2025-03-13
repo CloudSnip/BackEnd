@@ -1,15 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import config, { AwsConfig } from '../../config.ts';
 import { generalLogger } from '../logger/winston.ts';
-import { DataLog } from '../../models/datalogs';
 import awsIot from 'aws-iot-device-sdk';
 import AWS from 'aws-sdk';
 import os from 'os';
+import Measurement from '../../api/measurement/model.ts';
+import { Logger } from 'winston';
 
 const { secretMasterName, host } = config.aws as AwsConfig;
 
 AWS.config.update({ region: 'eu-central-1' });
 
 const iot = new AWS.Iot();
+
+interface Thing { iotCode: string; clientId: { toString: () => string; }; type: string; certificateArn: string }
 
 class IotService {
     private static instance: IotService;
@@ -89,7 +93,7 @@ class IotService {
         await this.detachThingPrincipal(thing);
         await this.updateCertificate(thing);
         await this.deleteCertificate(thing);
-        await this.deleteThing(thing);
+        await this.DeleteThing(thing);
     }
 
     private detachPolicy(thing: Thing) {
@@ -161,7 +165,7 @@ class IotService {
         });
     }
 
-    private deleteThing(thing: Thing) {
+    private DeleteThing(thing: Thing) {
         const params = {
             thingName: thing.iotCode,
         };
@@ -181,12 +185,13 @@ class IotService {
         let objectMessage;
         try {
             objectMessage = JSON.parse(message);
-        } catch (_error) {
+        } catch (error: any) {
             generalLogger.error(`error parsing message: ${message}`);
+            generalLogger.error(error);
         }
 
-        DataLog.parseMessage(objectMessage);
+        Measurement.parseMessage(objectMessage);
     }
 }
 
-export default IotService.getInstance();
+export default IotService;
