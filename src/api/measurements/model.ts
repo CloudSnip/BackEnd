@@ -5,7 +5,7 @@ import { toJSON } from "./utils/index.ts";
 
 export interface IMeasurement extends Document{
     timestamp: Schema.Types.Date
-    deviceId: string
+    deviceId: Schema.Types.ObjectId
     humidity: Schema.Types.Double
     temperature: Schema.Types.Double
 }
@@ -23,7 +23,7 @@ const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel,
         q: true
     },
     deviceId: {
-        type: String,
+        type: Schema.Types.ObjectId,
         required: true,
         q: true
     },
