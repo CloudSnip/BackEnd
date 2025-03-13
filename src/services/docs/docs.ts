@@ -35,7 +35,7 @@ const swaggerDefinition = {
     },
     servers: [
       {
-        url: Config.ip + ":" + Config.port,
+        url: `http://localhost:${Config.port}`,
       },
     ],
     components: {

@@ -30,7 +30,7 @@ router.get('/', actions.getAll)
 
 /**
  * @swagger
- * /sensor:
+ * /sensors:
  *   post:
  *     summary: Create a new sensor
  *     tags: [Sensors]
