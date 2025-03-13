@@ -40,32 +40,38 @@ jobs:
           script: |
             # Using GitHub Token for authentication with private repositories
             git config --global url."https://${{ secrets.GITHUB_TOKEN }}:@github.com".insteadOf "https://github.com"
-
-            # Check if the repo is already cloned. If not, clone it.
-            if [ ! -d "${{ secrets.PROD_DIR }}" ] && [ "${{ github.ref }}" == "refs/heads/main" ]; then
-              echo "Cloning production repository..."
-              git clone https://github.com/${{ github.repository }} ${{ secrets.PROD_DIR }}
-              cd ${{ secrets.PROD_DIR }}
-              git checkout main
-            elif [ ! -d "${{ secrets.DEV_DIR }}" ] && [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-              echo "Cloning development repository..."
-              git clone https://github.com/${{ github.repository }} ${{ secrets.DEV_DIR }}
-              cd ${{ secrets.DEV_DIR }}
-              git checkout develop
-            fi
-
-            # If the repo is already cloned, pull the latest changes.
+            
+            # Check if the 'backend' directory is empty or doesn't exist, then clone or pull accordingly.
             if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-              echo "Deploying to production..."
-              cd ${{ secrets.PROD_DIR }}
-              git pull origin main  # Pull from main for production
+              if [ ! -d "${{ secrets.PROD_DIR }}/backend" ] || [ ! "$(ls -A ${{ secrets.PROD_DIR }}/backend)" ]; then
+                echo "Cloning production repository..."
+                git clone https://github.com/${{ github.repository }} ${{ secrets.PROD_DIR }}
+                cd ${{ secrets.PROD_DIR }}/backend
+                git checkout main
+              else
+                echo "Production backend directory is not empty, pulling latest changes..."
+                cd ${{ secrets.PROD_DIR }}/backend
+                git pull origin main  # Pull from main for production
+              fi
+
+              # Deploy the production app
               npm ci
               npm run frontend
               pm2 restart chatg --update-env
+
             elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
-              echo "Deploying to development..."
-              cd ${{ secrets.DEV_DIR }}
-              git pull origin develop  # Pull from develop for development
+              if [ ! -d "${{ secrets.DEV_DIR }}/backend" ] || [ ! "$(ls -A ${{ secrets.DEV_DIR }}/backend)" ]; then
+                echo "Cloning development repository..."
+                git clone https://github.com/${{ github.repository }} ${{ secrets.DEV_DIR }}
+                cd ${{ secrets.DEV_DIR }}/backend
+                git checkout develop
+              else
+                echo "Development backend directory is not empty, pulling latest changes..."
+                cd ${{ secrets.DEV_DIR }}/backend
+                git pull origin develop  # Pull from develop for development
+              fi
+
+              # Deploy the development app
               npm ci
               npm run frontend
               pm2 restart chatg --update-env
