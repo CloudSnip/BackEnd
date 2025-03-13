@@ -81,7 +81,7 @@ jobs:
                 echo "Process 'chatg' not found. Starting new process..."
                 cd ${{ secrets.PROD_DIR }}/backend
                 pm2 start npm --name chatg -- run dev  # Adjust the path as necessary
-                pm2 save  # Save the process to be resurrected on reboot
+                pm2 save --force  # Save the process to be resurrected on reboot
               fi
 
             elif [ "${{ github.ref }}" == "refs/heads/develop" ]; then
@@ -123,7 +123,7 @@ jobs:
                 echo "Process 'chatg' not found. Starting new process..."
                 cd ${{ secrets.DEV_DIR }}/backend
                 pm2 start npm --name chatg -- run dev  # Adjust the path as necessary
-                pm2 save  # Save the process to be resurrected on reboot
+                pm2 save --force  # Save the process to be resurrected on reboot
               fi
             fi
 
