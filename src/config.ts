@@ -41,6 +41,12 @@ interface MongoConfig {
     };
 }
 
+export interface AwsConfig {
+    secretMasterUrl: string;
+    secretMasterName: string;
+    host: string;
+}
+
 interface Config {
     appName: string;
     env: string;
@@ -53,6 +59,7 @@ interface Config {
     mongo: MongoConfig;
     clientUrl: string;
     expressSSLRedirect?: boolean;
+    aws?: AwsConfig;
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -74,6 +81,11 @@ const config: { [key in 'all' | 'test' | 'development' | 'production']: Partial<
             uri: process.env.MONGODB_URI || `mongodb://localhost:27888/${APP_NAME}-dev`
         },
         clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
+        aws: {
+            secretMasterUrl: requireProcessEnv('SECRET_MASTER_URL'),
+            secretMasterName: requireProcessEnv('SECRET_MASTER_NAME'),
+            host: requireProcessEnv('HOST')
+        }
     },
     test: {
         mongo: {
