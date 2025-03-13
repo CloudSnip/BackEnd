@@ -1,6 +1,8 @@
 import { ConfigurableSchema } from "../../utils/lib/mongoose/index.ts";
-import mongoose, { Document, Model} from 'mongoose';
 import { toJSON } from "./utils/index.ts";
+
+import mongooseToSwagger from 'mongoose-to-swagger';
+import mongoose, { Document, Model} from 'mongoose';
 
 export interface ISensor extends Document{
     name: string
@@ -28,5 +30,6 @@ const sensorSchema = new ConfigurableSchema<ISensor, SensorModel, ISensorMethods
 })
 
 const Sensor = mongoose.model<ISensor, SensorModel>('Sensor', sensorSchema);
+export const swaggerSchema = mongooseToSwagger(Sensor);
 
 export default Sensor;

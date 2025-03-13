@@ -1,6 +1,5 @@
 import { generateControllers } from "../../utils/lib/generator/index.ts";
-import { Request, Response } from "express"
-import Sensor, { ISensor } from "./model.ts"
+import Sensor from "./model.ts"
 
 const actions = generateControllers(Sensor, "sensor");
 
