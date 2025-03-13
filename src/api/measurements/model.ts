@@ -5,6 +5,7 @@ import { parseMessage, toJSON } from "./utils/index.ts";
 
 export interface IMeasurement extends Document {
     timestamp: Schema.Types.Date
+    deviceId: string
     humidity: Schema.Types.Double
     temperature: Schema.Types.Double
 }
@@ -21,6 +22,11 @@ type MeasurementModel = Model<IMeasurement, {}, IMeasurementMetods>
 const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel, IMeasurementMetods>({
     timestamp: {
         type: Schema.Types.Date,
+        required: true,
+        q: true
+    },
+    deviceId: {
+        type: String,
         required: true,
         q: true
     },
@@ -41,6 +47,18 @@ const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel,
     },
     statics: {
         parseMessage
+    },
+    timestamps: false,
+    configuration: {
+        indexes: [
+            {
+                fields: {deviceId: 1},
+                options: { unique: false }
+            }
+        ],
+        methods:{
+            toJSON
+        }
     }
 })
 
