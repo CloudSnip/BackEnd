@@ -22,6 +22,7 @@ jobs:
       - name: Debugging VPS Server IP
         run: |
           echo "VPS Server IP: ${{ secrets.VPS_SERVER_IP }}"
+          echo "ASDASDASD: ${{ secrets.ASD }}"
           # To avoid exposing sensitive data, ensure you don't echo private keys or other secrets
 
       - name: Deploy Backend and Frontend
