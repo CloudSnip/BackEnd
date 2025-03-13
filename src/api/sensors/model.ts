@@ -3,13 +3,14 @@ import mongoose, { Document, Model} from 'mongoose';
 import { toJSON } from "./utils/index.ts";
 
 export interface ISensor extends Document{
-    name: String
+    name: string
 }
 
 interface ISensorMethods{
     toJson(): Record<string, unknown>
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type SensorModel = Model<ISensor, {}, ISensorMethods>
 
 const sensorSchema = new ConfigurableSchema<ISensor, SensorModel, ISensorMethods>({
@@ -18,7 +19,7 @@ const sensorSchema = new ConfigurableSchema<ISensor, SensorModel, ISensorMethods
         required: true
     }
 }, {
-    timestamps: false,
+    timestamps: true,
     configuration: {
         methods: {
             toJSON
