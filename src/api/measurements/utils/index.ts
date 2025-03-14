@@ -11,7 +11,7 @@ export type sensorMqttMessage = {
  }
 
 export const toJSON = function(this: IMeasurement){
-    return this.toJSON()
+    return this.toObject()
 }
 
 export async function parseMessage(message: sensorMqttMessage){
