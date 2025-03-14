@@ -4,8 +4,7 @@ import { generalLogger } from '../logger/winston.ts';
 import awsIot from 'aws-iot-device-sdk';
 import AWS from 'aws-sdk';
 import os from 'os';
-import Measurement from '../../api/measurement/model.ts';
-import { Logger } from 'winston';
+import Measurement from '../../api/measurements/model.ts';
 
 const { secretMasterName, host } = config.aws as AwsConfig;
 
