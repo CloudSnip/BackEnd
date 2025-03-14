@@ -1,18 +1,21 @@
 import { ConfigurableSchema } from "../../utils/lib/mongoose/index.ts";
-import mongoose, { Document, Model} from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 import { Schema } from "mongoose";
-import { toJSON } from "./utils/index.ts";
+import { parseMessage, toJSON } from "./utils/index.ts";
 
-export interface IMeasurement extends Document{
+export interface IMeasurement extends Document {
     timestamp: Schema.Types.Date
     humidity: Schema.Types.Double
     temperature: Schema.Types.Double
 }
 
-interface IMeasurementMetods{
+interface IMeasurementMetods {
     toJson(): Record<string, unknown>
+    // eslint-disable-next-line no-unused-vars
+    parseMessage(message: string): Promise<IMeasurement>
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type MeasurementModel = Model<IMeasurement, {}, IMeasurementMetods>
 
 const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel, IMeasurementMetods>({
@@ -33,8 +36,11 @@ const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel,
     }
 
 }, {
-    methods:{
+    methods: {
         toJSON
+    },
+    statics: {
+        parseMessage
     }
 })
 
