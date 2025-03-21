@@ -5,7 +5,6 @@ import fs from 'fs';
 import converter from 'openapi-to-postmanv2'
 import { generalLogger } from '../logger/winston.ts';
 import { readdirSync, statSync } from 'fs';
-import Config from '../../config.ts';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename) + "/../../api";
@@ -34,9 +33,6 @@ const swaggerDefinition = {
       description: "Documentation for your API",
     },
     servers: [
-      {
-        url: `http://localhost:${Config.port}`,
-      },
     ],
     components: {
       schemas: {
