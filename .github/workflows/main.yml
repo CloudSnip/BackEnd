@@ -101,7 +101,7 @@ jobs:
                       APP_NAME=${{ vars.APP_NAME }}
                       CLIENT_URL=${{ vars.CLIENT_URL_DEV }}
                       IP=${{ vars.IP }}
-                      PORT=${{ vars.PORT }}
+                      PORT=${{ vars.PORT_DEV }}
                       MASTER_KEY=${{ secrets.MASTER_KEY_DEV }}
                       JWT_SECRET=${{ secrets.JWT_SECRET_DEV }}
                       MONGODB_URI=${{ secrets.MONGODB_URI_DEV }}
