@@ -12,7 +12,7 @@ const { secretMasterName, secretMasterUrl } = config.aws as AwsConfig;
 export function checkMasterCertificate() {
     return new Promise((resolve, reject) => {
         try {
-            const file = fs.readFileSync(`${os.tmpdir()}}/${secretMasterName}.certificate.pem.crt`);
+            const file = fs.readFileSync(`${os.tmpdir()}/${secretMasterName}.certificate.pem.crt`);
             resolve(file);
         } catch (err) {
             generalLogger.error(err);
