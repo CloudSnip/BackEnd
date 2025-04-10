@@ -29,7 +29,8 @@ const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel,
     deviceId: {
         type: Schema.Types.ObjectId,
         required: true,
-        q: true
+        q: true,
+        ref: 'Sensor'
     },
     humidity: {
         type: Schema.Types.Double,
@@ -41,7 +42,6 @@ const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel,
         required: true,
         q: true
     }
-
 }, {
     methods: {
         toJSON

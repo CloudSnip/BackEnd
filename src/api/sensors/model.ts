@@ -18,14 +18,15 @@ type SensorModel = Model<ISensor, {}, ISensorMethods>
 const sensorSchema = new ConfigurableSchema<ISensor, SensorModel, ISensorMethods>({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     }
 }, {
     timestamps: true,
     configuration: {
         methods: {
             toJSON
-        }
+        },
     }
 })
 
