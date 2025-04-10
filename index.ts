@@ -22,7 +22,12 @@ app.use(express.json());
 // }));
 
 //allow all origins
-app.use(cors());
+app.use(cors({
+    origin: '*',
+    allowedHeaders: '*',
+    exposedHeaders: ['Content-Type'],
+}
+));
 
 export const upload = multer({
     storage: multer.memoryStorage(),
