@@ -12,6 +12,10 @@ const { secretMasterName, secretMasterUrl } = config.aws as AwsConfig;
 export function checkMasterCertificate() {
     return new Promise((resolve, reject) => {
         try {
+            fs.unlinkSync(`${os.tmpdir()}/${secretMasterName}.certificate.pem.crt`);
+            fs.unlinkSync(`${os.tmpdir()}/${secretMasterName}.private.pem.key`);
+            fs.unlinkSync(`${os.tmpdir()}/AmazonRootCA1.pem`);
+
             const file = fs.readFileSync(`${os.tmpdir()}/${secretMasterName}.certificate.pem.crt`);
             generalLogger.info(os.tmpdir())
             resolve(file);
