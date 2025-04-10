@@ -43,9 +43,6 @@ const measurementSchema = new ConfigurableSchema<IMeasurement, MeasurementModel,
         q: true
     }
 }, {
-    methods: {
-        toJSON
-    },
     statics: {
         parseMessage
     },

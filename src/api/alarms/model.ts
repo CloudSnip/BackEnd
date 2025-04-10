@@ -37,7 +37,8 @@ const alarmSchema = new ConfigurableSchema<IAlarm, AlarmModel, IAlarmMethods>({
     sensorId: {
         type: Schema.Types.ObjectId,
         required: true,
-        q: true
+        q: true,
+        ref: 'Sensor',
     }
 }, {
     methods: {

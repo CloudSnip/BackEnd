@@ -17,9 +17,17 @@ app.use(requestLogger);
 app.use(passportConfig.initialize());
 
 app.use(express.json());
+// app.use(cors({
+//     origin: [config.clientUrl],
+// }));
+
+//allow all origins
 app.use(cors({
-    origin: [config.clientUrl],
-}));
+    origin: '*',
+    allowedHeaders: '*',
+    exposedHeaders: ['Content-Type'],
+}
+));
 
 export const upload = multer({
     storage: multer.memoryStorage(),
