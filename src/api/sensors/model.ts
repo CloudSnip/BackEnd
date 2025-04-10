@@ -19,7 +19,8 @@ const sensorSchema = new ConfigurableSchema<ISensor, SensorModel, ISensorMethods
     name: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        q: true
     }
 }, {
     timestamps: true,
