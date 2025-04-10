@@ -13,6 +13,7 @@ export function checkMasterCertificate() {
     return new Promise((resolve, reject) => {
         try {
             const file = fs.readFileSync(`${os.tmpdir()}/${secretMasterName}.certificate.pem.crt`);
+            generalLogger.info(os.tmpdir())
             resolve(file);
         } catch (err) {
             generalLogger.error(err);
