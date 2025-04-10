@@ -56,5 +56,58 @@ actions.getWeeklyAverage = async (req, res) => {
     }
 };
 
+actions.get12HourAverage = async (req, res) => {
+    try {
+        const startDate = new Date(Date.now() - 12 * 60 * 60 * 1000);
+        const endDate = new Date();
+
+        const rawData = await Measurements.aggregate([
+            {
+                $match: {
+                    timestamp: { $gte: startDate, $lte: endDate },
+                },
+            },
+            {
+                $group: {
+                    _id: {
+                        deviceId: "$deviceId",
+                        hour: { $dateToString: { format: "%Y-%m-%dT%H:00:00", date: "$timestamp" } },
+                    },
+                    averageTemperature: { $avg: "$temperature" },
+                    averageHumidity: { $avg: "$humidity" },
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    deviceId: "$_id.deviceId",
+                    hour: "$_id.hour",
+                    averageTemperature: 1,
+                    averageHumidity: 1,
+                },
+            },
+            {
+                $sort: { hour: 1, deviceId: 1 },
+            },
+        ]);
+
+        const data = rawData.reduce((acc, item) => {
+            if (!acc[item.hour]) {
+                acc[item.hour] = [];
+            }
+            acc[item.hour].push({
+                deviceId: item.deviceId,
+                averageTemperature: item.averageTemperature,
+                averageHumidity: item.averageHumidity,
+            });
+            return acc;
+        }, {});
+
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error " + error.message });
+    }
+};
+
 export { actions }
 
